@@ -2,7 +2,6 @@ package configprovider
 
 import (
 	"bytes"
-	"context"
 	"fmt"
 	"io"
 	"mime"
@@ -10,10 +9,10 @@ import (
 	"net/mail"
 	"strings"
 
-	"github.com/aws/aws-sdk-go-v2/feature/ec2/imds"
 	"github.com/awslabs/amazon-eks-ami/nodeadm/api"
 	internalapi "github.com/awslabs/amazon-eks-ami/nodeadm/internal/api"
 	apibridge "github.com/awslabs/amazon-eks-ami/nodeadm/internal/api/bridge"
+	imds "github.com/awslabs/amazon-eks-ami/nodeadm/internal/aws/imds"
 )
 
 const (
@@ -23,18 +22,14 @@ const (
 	nodeConfigMediaType        = "application/" + api.GroupName
 )
 
-type userDataConfigProvider struct {
-	imdsClient *imds.Client
-}
+type userDataConfigProvider struct{}
 
 func NewUserDataConfigProvider() ConfigProvider {
-	return &userDataConfigProvider{
-		imdsClient: imds.New(imds.Options{}),
-	}
+	return &userDataConfigProvider{}
 }
 
 func (ics *userDataConfigProvider) Provide() (*internalapi.NodeConfig, error) {
-	userData, err := ics.getUserData()
+	userData, err := imds.GetUserData()
 	if err != nil {
 		return nil, err
 	}
@@ -53,14 +48,6 @@ func (ics *userDataConfigProvider) Provide() (*internalapi.NodeConfig, error) {
 		}
 		return config, nil
 	}
-}
-
-func (ics userDataConfigProvider) getUserData() ([]byte, error) {
-	resp, err := ics.imdsClient.GetUserData(context.TODO(), &imds.GetUserDataInput{})
-	if err != nil {
-		return nil, err
-	}
-	return io.ReadAll(resp.Content)
 }
 
 func getMIMEMultipartReader(data []byte) (*multipart.Reader, error) {

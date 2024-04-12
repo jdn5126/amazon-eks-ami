@@ -22,6 +22,7 @@
     "docker_version": null,
     "enable_fips": null,
     "encrypted": null,
+    "iam_instance_profile": null,
     "instance_type": null,
     "kernel_version": null,
     "kms_key_id": null,
@@ -41,6 +42,7 @@
     "ssm_agent_version": null,
     "subnet_id": null,
     "temporary_security_group_source_cidrs": null,
+    "user_data_file": null,
     "volume_type": null,
     "working_dir": null
   },
@@ -86,6 +88,7 @@
         "max_attempts": 90
       },
       "ami_regions": "{{user `ami_regions`}}",
+      "iam_instance_profile": "{{user `iam_instance_profile`}}",
       "ssh_username": "{{user `ssh_username`}}",
       "ssh_interface": "{{user `ssh_interface`}}",
       "temporary_security_group_source_cidrs": "{{user `temporary_security_group_source_cidrs`}}",
@@ -114,7 +117,8 @@
       "ami_description": "{{ user `ami_description` }}, {{ user `ami_component_description` }}",
       "metadata_options": {
         "http_tokens": "required"
-      }
+      },
+      "user_data_file": "{{user `user_data_file`}}"
     }
   ],
   "provisioners": [

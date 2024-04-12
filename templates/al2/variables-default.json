@@ -20,6 +20,7 @@
     "encrypted": "false",
     "kernel_version": "",
     "kms_key_id": "",
+    "iam_instance_profile": "",
     "launch_block_device_mappings_volume_size": "4",
     "pause_container_version": "3.5",
     "pull_cni_from_github": "true",
@@ -34,6 +35,7 @@
     "ssm_agent_version": "",
     "subnet_id": "",
     "temporary_security_group_source_cidrs": "",
+    "user_data_file": null,
     "volume_type": "gp2",
     "working_dir": "{{user `remote_folder`}}/worker"
 }
